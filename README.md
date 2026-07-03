@@ -240,8 +240,6 @@ This project is developed for educational and learning purposes.
 4. Push the branch
 5. Create a Pull Request
 
----
-
 ## 📧 Contact
 
 **Shivam Sahu**
