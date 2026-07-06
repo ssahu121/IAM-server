@@ -9,9 +9,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class LoginRequest {
+public class LoginResponse {
 
-    private String username;
-    private String password;
+    private String accessToken;
+    private String tokenType;
     private Long expiresIn;
 }
