@@ -4,6 +4,7 @@ import com.iam.iam_server.dto.LoginRequest;
 import com.iam.iam_server.dto.LoginResponse;
 import com.iam.iam_server.security.JwtService;
 import com.iam.iam_server.service.AuthService;
+import com.iam.iam_server.service.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,7 +18,7 @@ import org.springframework.stereotype.Service;
 public class AuthServiceImpl implements AuthService {
 
     private final AuthenticationManager authenticationManager;
-    private final UserDetailsService userDetailsService;
+    private final CustomUserDetailsService customUserDetailsService;
     private final JwtService jwtService;
 
     @Value("${jwt.expiration}")
@@ -34,7 +35,7 @@ public class AuthServiceImpl implements AuthService {
         );
 
         UserDetails user =
-                userDetailsService.loadUserByUsername(request.getUsername());
+                customUserDetailsService.loadUserByUsername(request.getUsername());
 
         String token = jwtService.generateToken(user);
 
