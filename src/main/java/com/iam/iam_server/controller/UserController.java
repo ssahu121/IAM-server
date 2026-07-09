@@ -1,5 +1,6 @@
 package com.iam.iam_server.controller;
 
+import com.iam.iam_server.dto.UserResponse;
 import com.iam.iam_server.entity.User;
 import com.iam.iam_server.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,12 +16,19 @@ public class UserController {
     private final UserRepository userRepository;
 
     @GetMapping("/profile")
-    public ResponseEntity<User> getProfile(Authentication authentication) {
+    public ResponseEntity<UserResponse> getProfile(Authentication authentication) {
 
-        User user = userRepository
-                .findByUsername(authentication.getName())
+        User user = userRepository.findByUsername(authentication.getName())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        return ResponseEntity.ok(user);
+        UserResponse response = UserResponse.builder()
+                .id(user.getId())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .username(user.getUsername())
+                .email(user.getEmail())
+                .build();
+
+        return ResponseEntity.ok(response);
     }
 }
