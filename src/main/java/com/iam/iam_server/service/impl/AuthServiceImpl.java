@@ -1,7 +1,13 @@
 package com.iam.iam_server.service.impl;
 
+import com.iam.iam_server.dto.ForgotPasswordRequest;
 import com.iam.iam_server.dto.LoginRequest;
 import com.iam.iam_server.dto.LoginResponse;
+import com.iam.iam_server.dto.ResetPasswordRequest;
+import com.iam.iam_server.entity.PasswordResetToken;
+import com.iam.iam_server.entity.User;
+import com.iam.iam_server.repository.PasswordResetTokenRepository;
+import com.iam.iam_server.repository.UserRepository;
 import com.iam.iam_server.security.JwtService;
 import com.iam.iam_server.service.AuthService;
 import com.iam.iam_server.service.CustomUserDetailsService;
@@ -10,8 +16,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -20,6 +29,9 @@ public class AuthServiceImpl implements AuthService {
     private final AuthenticationManager authenticationManager;
     private final CustomUserDetailsService customUserDetailsService;
     private final JwtService jwtService;
+    private final UserRepository userRepository;
+    private final PasswordResetTokenRepository passwordResetTokenRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Value("${jwt.expiration}")
     private Long expiration;
@@ -27,12 +39,17 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public LoginResponse login(LoginRequest request) {
 
+        System.out.println("LOGIN USERNAME = " + request.getUsername());
+        System.out.println("LOGIN PASSWORD = " + request.getPassword());
+
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getUsername(),
                         request.getPassword()
                 )
         );
+
+        System.out.println("AUTHENTICATION SUCCESS");
 
         UserDetails user =
                 customUserDetailsService.loadUserByUsername(request.getUsername());
@@ -44,5 +61,46 @@ public class AuthServiceImpl implements AuthService {
                 .tokenType("Bearer")
                 .expiresIn(expiration)
                 .build();
+    }
+
+    @Override
+    public void forgotPassword(ForgotPasswordRequest request) {
+
+        User user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        String token = UUID.randomUUID().toString();
+
+        PasswordResetToken resetToken = PasswordResetToken.builder()
+                .token(token)
+                .user(user)
+                .expiryDate(LocalDateTime.now().plusMinutes(30))
+                .build();
+
+        passwordResetTokenRepository.save(resetToken);
+
+        System.out.println("==================================");
+        System.out.println("RESET TOKEN = " + token);
+        System.out.println("==================================");
+    }
+
+    @Override
+    public void resetPassword(ResetPasswordRequest request) {
+
+        PasswordResetToken resetToken = passwordResetTokenRepository
+                .findByToken(request.getToken())
+                .orElseThrow(() -> new RuntimeException("Invalid token"));
+
+        if (resetToken.getExpiryDate().isBefore(LocalDateTime.now())) {
+            throw new RuntimeException("Token expired");
+        }
+
+        User user = resetToken.getUser();
+
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+
+        userRepository.save(user);
+
+        passwordResetTokenRepository.delete(resetToken);
     }
 }

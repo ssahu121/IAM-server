@@ -1,5 +1,7 @@
 package com.iam.iam_server.controller;
 
+import com.iam.iam_server.dto.ForgotPasswordRequest;
+import com.iam.iam_server.dto.ResetPasswordRequest;
 import com.iam.iam_server.dto.LoginRequest;
 import com.iam.iam_server.dto.LoginResponse;
 import com.iam.iam_server.dto.RegisterRequest;
@@ -30,5 +32,22 @@ public class AuthController {
             @RequestBody LoginRequest request) {
 
         return ResponseEntity.ok(authService.login(request));
+    }
+    @PostMapping("/forgot-password")
+    public ResponseEntity<String> forgotPassword(
+            @RequestBody ForgotPasswordRequest request) {
+
+        authService.forgotPassword(request);
+
+        return ResponseEntity.ok("Password reset token generated");
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<String> resetPassword(
+            @RequestBody ResetPasswordRequest request) {
+
+        authService.resetPassword(request);
+
+        return ResponseEntity.ok("Password reset successfully");
     }
 }
