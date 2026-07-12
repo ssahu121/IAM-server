@@ -17,13 +17,21 @@ public class RoleController {
 
     @PostMapping
     public ResponseEntity<Role> createRole(@RequestBody Role role) {
-
         return ResponseEntity.ok(roleService.createRole(role));
     }
 
     @GetMapping
     public ResponseEntity<List<Role>> getAllRoles() {
-
         return ResponseEntity.ok(roleService.getAllRoles());
+    }
+
+    @PostMapping("/{roleId}/permissions/{permissionId}")
+    public ResponseEntity<String> assignPermissionToRole(
+            @PathVariable Long roleId,
+            @PathVariable Long permissionId) {
+
+        roleService.assignPermissionToRole(roleId, permissionId);
+
+        return ResponseEntity.ok("Permission assigned to role successfully");
     }
 }

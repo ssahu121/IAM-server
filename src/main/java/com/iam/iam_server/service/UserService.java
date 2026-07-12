@@ -8,6 +8,11 @@ import com.iam.iam_server.dto.UserResponse;
 public interface UserService {
 
     UserResponse register(RegisterRequest request);
+
     UserResponse updateProfile(String username, UpdateProfileRequest request);
+
     void changePassword(String username, ChangePasswordRequest request);
+
+    // NEW
+    void assignRoleToUser(Long userId, Long roleId);
 }

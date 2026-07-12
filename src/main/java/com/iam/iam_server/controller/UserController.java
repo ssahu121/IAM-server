@@ -45,6 +45,7 @@ public class UserController {
                 userService.updateProfile(authentication.getName(), request)
         );
     }
+
     @PutMapping("/change-password")
     public ResponseEntity<String> changePassword(
             Authentication authentication,
@@ -53,5 +54,15 @@ public class UserController {
         userService.changePassword(authentication.getName(), request);
 
         return ResponseEntity.ok("Password changed successfully");
+    }
+
+    @PostMapping("/{userId}/roles/{roleId}")
+    public ResponseEntity<String> assignRoleToUser(
+            @PathVariable Long userId,
+            @PathVariable Long roleId) {
+
+        userService.assignRoleToUser(userId, roleId);
+
+        return ResponseEntity.ok("Role assigned to user successfully");
     }
 }

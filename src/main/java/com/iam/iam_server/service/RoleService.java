@@ -9,4 +9,6 @@ public interface RoleService {
     Role createRole(Role role);
 
     List<Role> getAllRoles();
+
+    void assignPermissionToRole(Long roleId, Long permissionId);
 }

@@ -9,9 +9,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class PermissionRequest {
+public class AssignPermissionRequest {
 
-    private String name;
+    private Long roleId;
 
-    private String description;
+    private Long permissionId;
 }
