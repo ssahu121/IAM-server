@@ -14,6 +14,7 @@ import com.iam.iam_server.service.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -39,28 +40,47 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public LoginResponse login(LoginRequest request) {
 
-        System.out.println("LOGIN USERNAME = " + request.getUsername());
-        System.out.println("LOGIN PASSWORD = " + request.getPassword());
+        System.out.println("==================================");
+        System.out.println("LOGIN API HIT");
+        System.out.println("USERNAME = " + request.getUsername());
+        System.out.println("PASSWORD = " + request.getPassword());
+        System.out.println("==================================");
 
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.getUsername(),
-                        request.getPassword()
-                )
-        );
+        try {
 
-        System.out.println("AUTHENTICATION SUCCESS");
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            request.getUsername(),
+                            request.getPassword()
+                    )
+            );
 
-        UserDetails user =
-                customUserDetailsService.loadUserByUsername(request.getUsername());
+            System.out.println("AUTHENTICATION SUCCESS");
 
-        String token = jwtService.generateToken(user);
+            UserDetails user =
+                    customUserDetailsService.loadUserByUsername(request.getUsername());
 
-        return LoginResponse.builder()
-                .accessToken(token)
-                .tokenType("Bearer")
-                .expiresIn(expiration)
-                .build();
+            String token = jwtService.generateToken(user);
+
+            System.out.println("JWT GENERATED");
+
+            return LoginResponse.builder()
+                    .accessToken(token)
+                    .tokenType("Bearer")
+                    .expiresIn(expiration)
+                    .build();
+
+        } catch (BadCredentialsException e) {
+
+            System.out.println("BAD CREDENTIALS");
+            throw new RuntimeException("Invalid username or password");
+
+        } catch (Exception e) {
+
+            System.out.println("LOGIN ERROR");
+            e.printStackTrace();
+            throw e;
+        }
     }
 
     @Override
