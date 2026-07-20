@@ -40,11 +40,11 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public LoginResponse login(LoginRequest request) {
 
-        System.out.println("==================================");
+        System.out.println("=================================");
         System.out.println("LOGIN API HIT");
         System.out.println("USERNAME = " + request.getUsername());
         System.out.println("PASSWORD = " + request.getPassword());
-        System.out.println("==================================");
+        System.out.println("=================================");
 
         try {
 
@@ -99,9 +99,9 @@ public class AuthServiceImpl implements AuthService {
 
         passwordResetTokenRepository.save(resetToken);
 
-        System.out.println("==================================");
+        System.out.println("=================================");
         System.out.println("RESET TOKEN = " + token);
-        System.out.println("==================================");
+        System.out.println("=================================");
     }
 
     @Override

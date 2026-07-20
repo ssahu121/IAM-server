@@ -25,7 +25,7 @@ public class CustomUserDetailsServiceImpl implements CustomUserDetailsService {
     public UserDetails loadUserByUsername(String username)
             throws UsernameNotFoundException {
 
-        System.out.println("==================================");
+        System.out.println("================================");
         System.out.println("Loading User : " + username);
 
         User user = userRepository.findByUsername(username)
@@ -62,7 +62,7 @@ public class CustomUserDetailsServiceImpl implements CustomUserDetailsService {
         }
 
         System.out.println("Authorities : " + authorities);
-        System.out.println("==================================");
+        System.out.println("================================");
 
         return org.springframework.security.core.userdetails.User
                 .withUsername(user.getUsername())
