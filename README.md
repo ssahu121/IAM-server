@@ -115,6 +115,7 @@ The APIs can be tested using:
 
 Swagger UI
 Postman
+
 📈 Future Enhancements
 Email-based Password Reset
 Refresh Token Support
@@ -124,6 +125,7 @@ Kubernetes Deployment
 Unit & Integration Testing
 OAuth2 / Google Login
 API Rate Limiting
+
 👨‍💻 Author
 
 Shivam Sahu
