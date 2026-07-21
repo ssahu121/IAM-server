@@ -7,36 +7,55 @@ import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
+import io.swagger.v3.oas.models.servers.Server;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class OpenApiConfig {
 
+    private static final String SECURITY_SCHEME_NAME = "bearerAuth";
+
     @Bean
     public OpenAPI customOpenAPI() {
 
-        final String securitySchemeName = "bearerAuth";
-
         return new OpenAPI()
+
                 .info(new Info()
-                        .title("IAM Server API")
-                        .description("Identity and Access Management System built using Spring Boot, Spring Security, JWT, RBAC and PostgreSQL.")
-                        .version("1.0.0")
+                        .title("Identity and Access Management (IAM) Server API")
+                        .description("""
+                                REST API documentation for the Identity and Access Management (IAM) Server.
+                                
+                                Features:
+                                • User Registration & Login
+                                • JWT Authentication
+                                • Role-Based Access Control (RBAC)
+                                • Permission Management
+                                • Forgot & Reset Password
+                                • User Profile Management
+                                """)
+                        .version("v1.0.0")
                         .contact(new Contact()
                                 .name("Shivam Sahu")
                                 .email("sharan26.06.2006@gmail.com"))
                         .license(new License()
                                 .name("MIT License")))
 
-                .addSecurityItem(new SecurityRequirement().addList(securitySchemeName))
+                .addServersItem(new Server()
+                        .url("http://localhost:8080")
+                        .description("Local Development Server"))
+
+                .addSecurityItem(new SecurityRequirement()
+                        .addList(SECURITY_SCHEME_NAME))
 
                 .components(new Components()
-                        .addSecuritySchemes(securitySchemeName,
+                        .addSecuritySchemes(
+                                SECURITY_SCHEME_NAME,
                                 new SecurityScheme()
-                                        .name(securitySchemeName)
+                                        .name(SECURITY_SCHEME_NAME)
                                         .type(SecurityScheme.Type.HTTP)
                                         .scheme("bearer")
-                                        .bearerFormat("JWT")));
+                                        .bearerFormat("JWT")
+                        ));
     }
 }
