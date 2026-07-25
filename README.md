@@ -131,8 +131,8 @@ API Rate Limiting
 Shivam Sahu
 
 Java Full Stack Developer
-
 ⭐ Project Highlights
+
 JWT Authentication
 Spring Security
 Role-Based Access Control (RBAC)
