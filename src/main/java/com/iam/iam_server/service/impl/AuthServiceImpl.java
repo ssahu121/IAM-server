@@ -44,7 +44,7 @@ public class AuthServiceImpl implements AuthService {
         System.out.println("LOGIN API HIT");
         System.out.println("USERNAME = " + request.getUsername());
         System.out.println("PASSWORD = " + request.getPassword());
-        System.out.println("===================================");
+        System.out.println("*************************************");
 
         try {
 

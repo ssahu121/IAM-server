@@ -62,7 +62,7 @@ public class CustomUserDetailsServiceImpl implements CustomUserDetailsService {
         }
 
         System.out.println("Authorities : " + authorities);
-        System.out.println("#############################################");
+        System.out.println("***********************************************");
 
         return org.springframework.security.core.userdetails.User
                 .withUsername(user.getUsername())
