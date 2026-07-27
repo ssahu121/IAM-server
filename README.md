@@ -140,4 +140,3 @@ Secure REST APIs
 PostgreSQL Integration
 Swagger Documentation
 Clean Architecture
-Industry-Oriented IAM Design
